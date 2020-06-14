@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>PyraBank</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <style>
+      html, body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        top: 0;
+        right: 0;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: 'Roboto', Sans-serif;
+        
+        --app-header-height: 256px;
+        
+        --primary-background-text-color: #888;
+        --secondary-background-text-color: #777;
+        
+        --primary-background-color: #eee;
+        --secondary-background-color: #fff;
+        
+        --dark-primary-color: #000;
+        --light-primary-color: #222;
+        
+        --primary-color: #111;
+        --secondary-color: #F9AA33;
+        
+        --primary-text-color: #eee;
+        --secondary-text-color: #fff;
+      }
+    </style>
+    
+    <pyrabank-shell drawer-opened></pyrabank-shell>
+    
+    <script src="./shell.js" type="module"></script>
+  </body>
+</html>

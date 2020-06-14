@@ -1,0 +1,35 @@
+{
+  "name": "pyrabank",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "jsproject --serve www",
+    "build": "rollup -c ./.build/rollup.config.js && node ./.build/crypto-icons.js",
+    "watch": "rollup -c ./.build/rollup.config.js -w"
+  },
+  "description": "project template scaffold",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vandeurenglenn/pyrabank.git"
+  },
+  "author": "vandeurenglenn <vandeurenglenn@gmail.com>",
+  "devDependencies": {
+    "rollup": "^2.13.1"
+  },
+  "dependencies": {
+    "cryptocurrency-icons": "^0.16.1",
+    "custom-pages": "^0.12.1",
+    "custom-select-mixins": "^0.13.0",
+    "custom-selector": "^0.2.1",
+    "custom-svg-icon": "^0.10.2",
+    "custom-svg-iconset": "^0.9.2",
+    "custom-tabs": "^0.13.1"
+  },
+  "bugs": {
+    "url": "https://github.com/vandeurenglenn/pyrabank/issues"
+  },
+  "homepage": "https://github.com/vandeurenglenn/pyrabank#readme",
+  "keywords": []
+}
