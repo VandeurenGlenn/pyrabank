@@ -7,6 +7,13 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
     this.shadowRoot.innerHTML = this.template
   }
   
+  connectedCallback() {
+    this.addEventListener('click', event => {
+      const name = event.composedPath()[0].name
+      globalThis.open(`${location.origin}/game/#!/home/?game=${name}`)
+    })
+  }
+  
   get template() {
     return `
     <style>
@@ -19,60 +26,7 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
         background: var(--light-primary-color);
         justify-content: center;
         align-items: center;
-      }
-      
-      section {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        background-position: bottom center;
-        background-repeat: no-repeat;
-        background-size: auto;
-        padding: 24px;
-      }
-      
-      h1, h2 {
-        margin: 0;
-        font-weight: 600;
-        width: fit-content;
-      }
-      
-      h1 {
-        color: #30a1b285;
-        font-size: 58px;
-        letter-spacing: -2px;
-      }
-      
-      h2 {
-        color: #30a1b285;
-        font-size: 32px;
-      }
-      
-      h3 {
-        font-size: 24px;
-        font-style: italic;
-      }
-      
-      p {
-        line-height: 1.5;
-        font-weight: 200;
-        max-width: 780px;
-        font-size: 18px;
-      }
-      
-      .hero {
-        width: 100%;
-        max-width: 1200px;
-        box-sizing: border-box;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-      }
-      
-      .column {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        pointer-events: none !important;
       }
       
       .container {
@@ -82,15 +36,11 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
         align-items: center;
         overflow: hidden;
         overflow-y: auto;
-        max-height: 492px;
+        max-height: 660px;
         max-width: 980px;
         height: 100%;
         width: 100%;
-      }
-      
-      img {
-        max-height: 50%;
-        max-width: 50%;
+        pointer-events: none;
       }
       
       @media (min-width: 680px) {
@@ -121,23 +71,25 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
     </style>
     
     <span class="container">
-    <game-item name="Tron"></game-item>
-    
-    <game-item name="BitTorrent"></game-item>
-    
-    <game-item name="BeatzCoin"></game-item>
-    
-    <game-item name="HEX"></game-item>
-    
-    <game-item name="Ethereum"></game-item>
-    
-    <game-item name="Basic Attention Token"></game-item>
-    
-    <game-item name="GHOST"></game-item>
-    
-    <game-item name="HEX2T"></game-item>
-    
-    <game-item name="HEX3D"></game-item>
+      <game-item name="Tron"></game-item>
+      
+      <game-item name="BitTorrent"></game-item>
+      
+      <game-item name="BeatzCoin"></game-item>
+      
+      <game-item name="HEX"></game-item>
+      
+      <game-item name="Ethereum"></game-item>
+      
+      <game-item name="Basic Attention Token"></game-item>
+      
+      <game-item name="GHOST"></game-item>
+      
+      <game-item name="HEX2T"></game-item>
+      
+      <game-item name="HEX2X"></game-item>
+      
+      <game-item name="HEX3D"></game-item>
     </span>
     `
   }

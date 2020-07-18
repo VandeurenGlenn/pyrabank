@@ -1,6 +1,6 @@
-import './shared-imports'
+import './../shared-imports'
 
-export default customElements.define('pyrabank-shell', class extends HTMLElement {
+export default customElements.define('game-shell', class extends HTMLElement {
   
   static get observedAttributes() {
     return ['desktop']
@@ -64,16 +64,39 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
   }
   
   async _selected({detail}) {
-    if (!await customElements.get(`pyrabank-${detail}-view`)) await import(`./${detail}.js`)
+    if (!await customElements.get(`pyragame-${detail}-view`)) await import(`./${detail}.js`)
     this._pages.select(detail)
     
     location.hash = `#!/${detail}`
   }
   
   async _onHashChange() {
-    let hash = location.hash.replace('#!/', '')
+    const parts = location.hash.split('/?')
+    const query = parts[1]
+    let hash = parts[0]
+    
+    if (query) {
+      let prevIndex;
+      const params = {}
+      const parts = query.split('=')
+      for (const param of parts) {
+        const index = parts.indexOf(param)
+        if (index !== prevIndex + 1) {
+          const value = parts[index + 1]
+          params[param] = value
+        }
+        prevIndex = index
+      }
+      if (Object.keys(params).length > 0) {
+        if (params.game) {
+          globalThis.pyrabank = globalThis.pyrabank || {}
+          pyrabank.game = params.game
+        }
+      }
+    }
+    hash = hash.replace('#!/', '')
     if (!hash) hash = 'home'
-    if (!await customElements.get(`pyrabank-${hash}-view`)) await import(`./${hash}.js`)
+    if (!await customElements.get(`pyragame-${hash}-view`)) await import(`./${hash}.js`)
     this._pages.select(hash)
     this._selector.selected = hash
   }
@@ -167,7 +190,7 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
   </custom-svg-iconset>
     <pyrabank-drawer>
     
-    <img slot="top" class="right" src="./assets/img/logo-transparent.webp"></img>
+    <img slot="top" class="right" src="./../assets/img/logo-transparent.webp"></img>
       <custom-selector attr-for-selected="data-route" slot="content">
         <span class="link" data-route="home">
           <custom-svg-icon icon="home"></custom-svg-icon>
@@ -216,19 +239,19 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
     <span class="container">
       
       <custom-pages attr-for-selected="data-route">
-        <pyrabank-home-view data-route="home"></pyrabank-home-view>
+        <pyragame-home-view data-route="home"></pyragame-home-view>
         
-        <pyrabank-about-view data-route="about"></pyrabank-about-view>
+        <pyragame-about-view data-route="about"></pyragame-about-view>
         
-        <pyrabank-info-view data-route="info"></pyrabank-info-view>
+        <pyragame-info-view data-route="info"></pyragame-info-view>
         
-        <pyrabank-media-view data-route="media"></pyrabank-media-view>
+        <pyragame-media-view data-route="media"></pyragame-media-view>
         
-        <pyrabank-games-view data-route="games"></pyrabank-games-view>
+        <pyragame-games-view data-route="games"></pyragame-games-view>
         
-        <pyrabank-guide-view data-route="guide"></pyrabank-guide-view>
+        <pyragame-guide-view data-route="guide"></pyragame-guide-view>
         
-        <pyrabank-swap-view data-route="swap"></pyrabank-swap-view>
+        <pyragame-swap-view data-route="swap"></pyragame-swap-view>
       </custom-pages>
     </span>
     `

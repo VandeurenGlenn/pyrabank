@@ -1,6 +1,10 @@
 import symbols from './../data/symbols'
 
 export default customElements.define('game-item', class extends HTMLElement {
+  
+  static get observedAttributes() {
+    return ['name']
+  }
   constructor() {
     super()
     this.attachShadow({mode: 'open'})
@@ -18,17 +22,31 @@ export default customElements.define('game-item', class extends HTMLElement {
   get _img() {
     return this.shadowRoot.querySelector('img')
   }
-  connectedCallback() {
-    const name = this.getAttribute('name')
-    if (name) {
-      const symbol = symbols[name]
-      this._name.innerHTML = name
+  
+  set name(value) {
+    if (value) {
+      const symbol = symbols[value]
+      this._name.innerHTML = value
       this._symbol.innerHTML = symbol
       
-      // this._img.alt = symbol
-      this._img.src = `./assets/logo/${symbol}.svg`
+      // check if we have an svg logo
+      // fallsback to png
+      fetch(`./assets/logo/${symbol}.svg`).then(async response => {
+        if (response.status === 404) this._img.src = `./assets/logo/${symbol}.png`
+        else this._img.src = `./assets/logo/${symbol}.svg`
+      })
     }
-  } 
+    
+    this.setAttribute('name', value)
+  }
+  
+  get name() {
+    return this.getAttribute('name')
+  }
+  
+  attributeChangedCallback(name, oldValue, value) {
+    if (oldValue !== value) this[name] = value
+  }
   
   get template() {
     return `
@@ -46,6 +64,8 @@ export default customElements.define('game-item', class extends HTMLElement {
         justify-content: center;
         box-sizing: border-box;
         padding: 12px;
+        pointer-events: auto;
+        cursor: pointer;
       }
       
       .column {
@@ -58,17 +78,20 @@ export default customElements.define('game-item', class extends HTMLElement {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        pointer-events: none;
       }
       
       img {
         width: 48px;
         height: 48px;
         
-        padding-bottom: 12px; 
+        padding-bottom: 12px;
+        pointer-events: none;
       }
       
       h5 {
         margin: 0;
+        pointer-events: none;
       }
     </style>
     

@@ -7,15 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <script>
-    if ('serviceWorker' in navigator && location.protocol === 'https:') {
-      navigator.serviceWorker.register('./service-worker.js')
-      .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
-    }
+      /**
+       * @dev disables serviceWorker when developing.
+       * please make sure when making changes to the SW that they work...
+       */
+      if ('serviceWorker' in navigator && location.protocol === 'https:') {
+        navigator.serviceWorker.register('./service-worker.js')
+        .then(function(registration) {
+          console.log('Registration successful, scope is:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('Service worker registration failed, error:', error);
+        });
+      }
     </script>
   </head>
   <body>
@@ -51,7 +55,7 @@
       }
     </style>
     
-    <pyrabank-shell drawer-opened></pyrabank-shell>
+    <game-shell drawer-opened></game-shell>
     
     <script src="./shell.js" type="module"></script>
   </body>

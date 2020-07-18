@@ -7,5 +7,6 @@ export default {
   HEX: 'HEX',
   GHOST: 'GHOST',
   HEX2T: 'HEX2T',
-  HEX3D: 'HEX3D'
+  HEX3D: 'HEX3D',
+  HEX2X: 'HEX2X'
 }

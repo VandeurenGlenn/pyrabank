@@ -7,10 +7,15 @@ var symbols = {
   HEX: 'HEX',
   GHOST: 'GHOST',
   HEX2T: 'HEX2T',
-  HEX3D: 'HEX3D'
+  HEX3D: 'HEX3D',
+  HEX2X: 'HEX2X'
 };
 
 customElements.define('game-item', class extends HTMLElement {
+  
+  static get observedAttributes() {
+    return ['name']
+  }
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
@@ -28,17 +33,31 @@ customElements.define('game-item', class extends HTMLElement {
   get _img() {
     return this.shadowRoot.querySelector('img')
   }
-  connectedCallback() {
-    const name = this.getAttribute('name');
-    if (name) {
-      const symbol = symbols[name];
-      this._name.innerHTML = name;
+  
+  set name(value) {
+    if (value) {
+      const symbol = symbols[value];
+      this._name.innerHTML = value;
       this._symbol.innerHTML = symbol;
       
-      // this._img.alt = symbol
-      this._img.src = `./assets/logo/${symbol}.svg`;
+      // check if we have an svg logo
+      // fallsback to png
+      fetch(`./assets/logo/${symbol}.svg`).then(async response => {
+        if (response.status === 404) this._img.src = `./assets/logo/${symbol}.png`;
+        else this._img.src = `./assets/logo/${symbol}.svg`;
+      });
     }
-  } 
+    
+    this.setAttribute('name', value);
+  }
+  
+  get name() {
+    return this.getAttribute('name')
+  }
+  
+  attributeChangedCallback(name, oldValue, value) {
+    if (oldValue !== value) this[name] = value;
+  }
   
   get template() {
     return `
@@ -56,6 +75,8 @@ customElements.define('game-item', class extends HTMLElement {
         justify-content: center;
         box-sizing: border-box;
         padding: 12px;
+        pointer-events: auto;
+        cursor: pointer;
       }
       
       .column {
@@ -68,17 +89,20 @@ customElements.define('game-item', class extends HTMLElement {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        pointer-events: none;
       }
       
       img {
         width: 48px;
         height: 48px;
         
-        padding-bottom: 12px; 
+        padding-bottom: 12px;
+        pointer-events: none;
       }
       
       h5 {
         margin: 0;
+        pointer-events: none;
       }
     </style>
     
@@ -100,6 +124,13 @@ var games = customElements.define('pyrabank-games-view', class extends HTMLEleme
     this.shadowRoot.innerHTML = this.template;
   }
   
+  connectedCallback() {
+    this.addEventListener('click', event => {
+      const name = event.composedPath()[0].name;
+      globalThis.open(`${location.origin}/game/#!/home/?game=${name}`);
+    });
+  }
+  
   get template() {
     return `
     <style>
@@ -112,60 +143,7 @@ var games = customElements.define('pyrabank-games-view', class extends HTMLEleme
         background: var(--light-primary-color);
         justify-content: center;
         align-items: center;
-      }
-      
-      section {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        background-position: bottom center;
-        background-repeat: no-repeat;
-        background-size: auto;
-        padding: 24px;
-      }
-      
-      h1, h2 {
-        margin: 0;
-        font-weight: 600;
-        width: fit-content;
-      }
-      
-      h1 {
-        color: #30a1b285;
-        font-size: 58px;
-        letter-spacing: -2px;
-      }
-      
-      h2 {
-        color: #30a1b285;
-        font-size: 32px;
-      }
-      
-      h3 {
-        font-size: 24px;
-        font-style: italic;
-      }
-      
-      p {
-        line-height: 1.5;
-        font-weight: 200;
-        max-width: 780px;
-        font-size: 18px;
-      }
-      
-      .hero {
-        width: 100%;
-        max-width: 1200px;
-        box-sizing: border-box;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-      }
-      
-      .column {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        pointer-events: none !important;
       }
       
       .container {
@@ -175,15 +153,11 @@ var games = customElements.define('pyrabank-games-view', class extends HTMLEleme
         align-items: center;
         overflow: hidden;
         overflow-y: auto;
-        max-height: 492px;
+        max-height: 660px;
         max-width: 980px;
         height: 100%;
         width: 100%;
-      }
-      
-      img {
-        max-height: 50%;
-        max-width: 50%;
+        pointer-events: none;
       }
       
       @media (min-width: 680px) {
@@ -214,23 +188,25 @@ var games = customElements.define('pyrabank-games-view', class extends HTMLEleme
     </style>
     
     <span class="container">
-    <game-item name="Tron"></game-item>
-    
-    <game-item name="BitTorrent"></game-item>
-    
-    <game-item name="BeatzCoin"></game-item>
-    
-    <game-item name="HEX"></game-item>
-    
-    <game-item name="Ethereum"></game-item>
-    
-    <game-item name="Basic Attention Token"></game-item>
-    
-    <game-item name="GHOST"></game-item>
-    
-    <game-item name="HEX2T"></game-item>
-    
-    <game-item name="HEX3D"></game-item>
+      <game-item name="Tron"></game-item>
+      
+      <game-item name="BitTorrent"></game-item>
+      
+      <game-item name="BeatzCoin"></game-item>
+      
+      <game-item name="HEX"></game-item>
+      
+      <game-item name="Ethereum"></game-item>
+      
+      <game-item name="Basic Attention Token"></game-item>
+      
+      <game-item name="GHOST"></game-item>
+      
+      <game-item name="HEX2T"></game-item>
+      
+      <game-item name="HEX2X"></game-item>
+      
+      <game-item name="HEX3D"></game-item>
     </span>
     `
   }

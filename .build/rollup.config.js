@@ -17,5 +17,12 @@ export default [
 			format: 'es',
 			sourcemap: false
 		}
+	}, {
+		input: ['src/game/shell.js', 'src/game/views/home.js'],
+		output: {
+			dir: 'www/game',
+			format: 'es',
+			sourcemap: false
+		}
 	}
 ];
