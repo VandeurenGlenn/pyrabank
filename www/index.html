@@ -3,19 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>PyraBank</title>
-    
+    <meta name="description" content="The first hourglass that enables you to create stable savings by giving you the ability to invest and reinvest your earnings,
+    without any possibility of losing more than the fees you paid.
+    Enter first, middle or last, your token value will not crash no matter how many sell - you just sit back and collect dividends from every interaction with the platform.">
+    <meta name="twitter:" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <script>
-    if ('serviceWorker' in navigator && location.protocol === 'https:') {
-      navigator.serviceWorker.register('./service-worker.js')
-      .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service worker registration failed, error:', error);
-      });
-    }
+    // if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    //   navigator.serviceWorker.register('./service-worker.js')
+    //   .then(function(registration) {
+    //     console.log('Registration successful, scope is:', registration.scope);
+    //   })
+    //   .catch(function(error) {
+    //     console.log('Service worker registration failed, error:', error);
+    //   });
+    // }
     </script>
   </head>
   <body>
@@ -27,10 +30,12 @@
         top: 0;
         right: 0;
       }
+      
+      @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600,800&display=swap');
       body {
         margin: 0;
         overflow: hidden;
-        font-family: 'Roboto', Sans-serif;
+        font-family: 'Open Sans', Sans-serif;
         
         --app-header-height: 256px;
         
@@ -41,7 +46,7 @@
         --secondary-background-color: #fff;
         
         --dark-primary-color: #000;
-        --light-primary-color: #222;
+        --light-primary-color: #2b2b33;
         
         --primary-color: #111;
         --secondary-color: #F9AA33;

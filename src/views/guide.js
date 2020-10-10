@@ -35,7 +35,7 @@ export default customElements.define('pyrabank-guide-view', class extends HTMLEl
         display: flex;
         flex-direction: column;
         color: var(--primary-text-color);
-        font-size: 22px;
+        font-size: 13px;
         overflow: hidden;
         overflow-y: auto;
         background: var(--light-primary-color);
@@ -62,7 +62,7 @@ export default customElements.define('pyrabank-guide-view', class extends HTMLEl
       custom-pages {
         max-width: 568px;
         width: 100%;
-        height: 256px;
+        height: 248px;
         flex: none;
         background: #2c2c2c;
       }

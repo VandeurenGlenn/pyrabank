@@ -27,6 +27,16 @@ export default customElements.define('game-shell', class extends HTMLElement {
     else this._drawer.removeAttribute('opened')
   }
   
+  get logos() {
+    return {
+      Tron: 'trx'
+    }
+  }
+  
+  get _img() {
+    return this.shadowRoot.querySelector('.logo')
+  }
+  
   constructor() {
     super()
     this.attachShadow({mode: 'open'})
@@ -71,7 +81,7 @@ export default customElements.define('game-shell', class extends HTMLElement {
   }
   
   async _onHashChange() {
-    const parts = location.hash.split('/?')
+    const parts = location.hash.split('?')
     const query = parts[1]
     let hash = parts[0]
     
@@ -97,8 +107,14 @@ export default customElements.define('game-shell', class extends HTMLElement {
     hash = hash.replace('#!/', '')
     if (!hash) hash = 'home'
     if (!await customElements.get(`pyragame-${hash}-view`)) await import(`./${hash}.js`)
+    
     this._pages.select(hash)
     this._selector.selected = hash
+    
+    this._pages.querySelector(`pyragame-${hash}-view`).game = pyrabank.game
+    
+    
+    
   }
   
   get template() {
@@ -114,6 +130,8 @@ export default customElements.define('game-shell', class extends HTMLElement {
       --svg-icon-color: #F9AA33;
       
       background: var(--light-primary-color);
+      
+      --app-header-height: 128px;
     }
     .container {
       position: absolute;
@@ -143,9 +161,8 @@ export default customElements.define('game-shell', class extends HTMLElement {
       text-transform: uppercase;
     }
     
-    img[slot="top"] {
-      width: 256px;
-      margin-top: -44px;
+    .logo {
+      width: 45%;
     }
     
     custom-selector {
@@ -168,6 +185,15 @@ export default customElements.define('game-shell', class extends HTMLElement {
     }
     
     
+    pyrabank-drawer custom-selector {
+      top: 0;
+    }
+    
+    .center-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
   
   <custom-svg-iconset>
@@ -189,8 +215,9 @@ export default customElements.define('game-shell', class extends HTMLElement {
     </defs>
   </custom-svg-iconset>
     <pyrabank-drawer>
-    
-    <img slot="top" class="right" src="./../assets/img/logo-transparent.webp"></img>
+      <span class="center-center" slot="top">
+      <img class="right logo" src="../assets/img/privatebank.webp"></img>
+      </span>
       <custom-selector attr-for-selected="data-route" slot="content">
         <span class="link" data-route="home">
           <custom-svg-icon icon="home"></custom-svg-icon>

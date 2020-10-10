@@ -1,4 +1,5 @@
 import { execSync } from 'child_process'
+import { terser } from 'rollup-plugin-terser'
 
 try {
 	execSync('rm www/*.js')
@@ -16,7 +17,10 @@ export default [
 			dir: 'www',
 			format: 'es',
 			sourcemap: false
-		}
+		},
+		plugins: [
+			terser()
+		]
 	}, {
 		input: ['src/game/shell.js', 'src/game/views/home.js'],
 		output: {

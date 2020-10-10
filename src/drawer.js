@@ -22,6 +22,9 @@ export default customElements.define('pyrabank-drawer', class extends mixin(HTML
         transform: translateX(-105%);
         transition: transform 160ms ease-out, opacity 160ms ease-out;
         background: var(--light-primary-color);
+        background-image: url(assets/diamond.svg);
+        
+        background-color: var(--light-primary-color);
       }
       
       :host([opened]) {

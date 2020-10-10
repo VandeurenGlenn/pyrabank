@@ -10,7 +10,7 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
   connectedCallback() {
     this.addEventListener('click', event => {
       const name = event.composedPath()[0].name
-      globalThis.open(`${location.origin}/game/#!/home/?game=${name}`)
+      globalThis.open(`${location.origin}/game/#!/home?game=${name}`)
     })
   }
   
@@ -27,6 +27,9 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
         justify-content: center;
         align-items: center;
         pointer-events: none !important;
+        background-image: url(assets/diamond.svg);
+        
+        background-color: var(--light-primary-color);
       }
       
       .container {
@@ -40,7 +43,7 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
         max-width: 980px;
         height: 100%;
         width: 100%;
-        pointer-events: none;
+        pointer-events: auto;
       }
       
       @media (min-width: 680px) {
@@ -67,9 +70,8 @@ export default customElements.define('pyrabank-games-view', class extends HTMLEl
           width: calc(100% / 5);
         }
       }
-      
     </style>
-    
+    <span class="background-overlay"></span>
     <span class="container">
       <game-item name="Tron"></game-item>
       

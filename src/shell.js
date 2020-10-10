@@ -1,4 +1,7 @@
 import './shared-imports'
+import Pubsub from './../node_modules/@vandeurenglenn/little-pubsub/src/index'
+
+globalThis.pubsub = new Pubsub()
 
 export default customElements.define('pyrabank-shell', class extends HTMLElement {
   
@@ -38,6 +41,23 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
   
   connectedCallback() {
     this._init()
+    
+    pubsub.subscribe('go', value => location.hash = `#!/${value}`)
+    pubsub.subscribe('drawer', () => {
+      if (this.getAttribute('desktop') === 'true') return
+      if (this._drawer.hasAttribute('opened')) this._drawer.removeAttribute('opened')
+      else this._drawer.setAttribute('opened', '') 
+    })
+    
+    this.addEventListener('click', event => {
+      const target = event.composedPath()[0]
+      if (target.dataset.event) {
+        const parts = target.dataset.event.split('.')
+        
+        if (parts[0]) pubsub.publish(parts[0], parts[1])  
+      }
+      
+    })
   }
   
   async _init() {
@@ -52,18 +72,19 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
       if (matches) {
         this.setAttribute('desktop', false)
         if (this._userOpened) return
-        
+        this.removeAttribute('drawer-opened')
         this._drawer.removeAttribute('opened')
       }
       else this.setAttribute('desktop', true)
     }
     
-    const desktop = globalThis.matchMedia('(max-width: 1020px)')
+    const desktop = globalThis.matchMedia('(max-width: 1200px)')
     updatePlatform(desktop)
     desktop.addListener(updatePlatform)
   }
   
   async _selected({detail}) {
+    if (this.getAttribute('desktop') === 'false') this._drawer.removeAttribute('opened')
     if (!await customElements.get(`pyrabank-${detail}-view`)) await import(`./${detail}.js`)
     this._pages.select(detail)
     
@@ -73,9 +94,17 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
   async _onHashChange() {
     let hash = location.hash.replace('#!/', '')
     if (!hash) hash = 'home'
-    if (!await customElements.get(`pyrabank-${hash}-view`)) await import(`./${hash}.js`)
+    
+    hash = hash.split('?')
+    
+    const subSelected = hash[1]
+    hash = hash[0]
+    const tag = `pyrabank-${hash}-view`
+    if (!await customElements.get(tag)) await import(`./${hash}.js`)
     this._pages.select(hash)
     this._selector.selected = hash
+    
+    if (subSelected) this._pages.querySelector(tag).select(subSelected)
   }
   
   get template() {
@@ -96,7 +125,7 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
       position: absolute;
       display: flex;
       flex-direction: column;
-      height: 100%;
+      height: calc(100% - var(--toolbar-height));
       width: 100%;
       right: 0;
       bottom: 0;
@@ -106,8 +135,9 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
       width: calc(100% - 256px);
     }
     
-    :host([desktop="false"]) {
-      
+    :host([desktop="false"]) [icon="menu"] {
+      opacity: 1;
+      pointer-events: auto;
     }
     
     .link {
@@ -120,13 +150,11 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
       text-transform: uppercase;
     }
     
-    img[slot="top"] {
-      width: 256px;
-      margin-top: -44px;
+    .logo {
+      width: 224px;
     }
     
     custom-selector {
-      top: -90px;
       position: relative;
     }
     
@@ -144,7 +172,19 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
       color: #fff;      
     }
     
+    [icon="menu"] {
+      z-index: 100;
+      --svg-icon-color: #eee;
+      opacity: 0;
+      pointer-events: none;
+      --svg-icon-size: 40px;
+    }
     
+    .center-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
   
   <custom-svg-iconset>
@@ -167,7 +207,10 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
   </custom-svg-iconset>
     <pyrabank-drawer>
     
-    <img slot="top" class="right" src="./assets/img/logo-transparent.webp"></img>
+      <span class="center-center" slot="top">
+        <img class="right logo" alt="Privatebank logo" src="./assets/img/privatebank.webp"></img>
+      </span>
+      
       <custom-selector attr-for-selected="data-route" slot="content">
         <span class="link" data-route="home">
           <custom-svg-icon icon="home"></custom-svg-icon>
@@ -229,7 +272,13 @@ export default customElements.define('pyrabank-shell', class extends HTMLElement
         <pyrabank-guide-view data-route="guide"></pyrabank-guide-view>
         
         <pyrabank-swap-view data-route="swap"></pyrabank-swap-view>
+        
+        <pyragame-home-view data-route="game"></pyragame-home-view>
       </custom-pages>
+      
+      <pyrabank-toolbar>
+        <custom-svg-icon slot="left" icon="menu" data-event="drawer.open"></custom-svg-icon>
+      </pyrabank-toolbar>
     </span>
     `
   }

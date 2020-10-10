@@ -1,11 +1,46 @@
 import './../header'
 import './../toolbar'
+import './../button'
 
 export default customElements.define('pyrabank-home-view', class extends HTMLElement {
   constructor() {
     super()
     this.attachShadow({mode: 'open'})
+    const script = document.createElement('script')
+    script.src = './third-party/typed.min.js'
+    script.onload = () => {
+      const typers = [
+        [this.shadowRoot.querySelector('.welcome-title'), ['welcome to', 'Privatebank']],
+        [this.shadowRoot.querySelector('.welcome-helper'), ['Decentralized Finance', 'No More Losing To Price Manipulation', 'No More Price Manipulation']]
+      ]
+      
+      const helperTypers = [        
+        
+      ]
+  
+        new Promise(() => typers.map(type => new Typed(type[0], {
+          // stringsElement: type[1],
+          strings: type[1],
+          typeSpeed: 0,
+          backSpeed: 0,
+          backDelay: 1100,
+          startDelay: 0,
+          loop: false,
+          showCursor: false
+        })))
+    }
+    document.head.appendChild(script)
     this.shadowRoot.innerHTML = this.template
+  }
+  
+  connectedCallback() {
+    this.addEventListener('click', event => {
+      const target = event.composedPath()[0]
+      console.log(target);
+      const parts = target.dataset.event.split('.')
+      if (parts[0]) pubsub.publish(parts[0], parts[1])
+    })
+      
   }
   
   get template() {
@@ -19,50 +54,34 @@ export default customElements.define('pyrabank-home-view', class extends HTMLEle
         overflow: hidden;
         overflow-y: auto;
         box-sizing: border-box;
-        padding: 24px;
+        background-image: url(assets/diamond.svg);
+        
+        background-color: var(--light-primary-color);
       }
-      
-      .welcome {        
-        color: #bcaa4d;
-        background: #fff;
-        background-image: url(https://pyrabank.com/wp-content/uploads/2019/11/background-orange100.png);
-      }
-      .background-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: linear-gradient(170deg, rgba(50,81,51,0.89) 31%, rgba(209,165,20,0.76) 74%);
-        opacity: 0.89;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
       section {
         position: relative;
         width: 100%;
         height: 100%;
-        background-position: bottom center;
-        background-repeat: no-repeat;
-        background-size: auto;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
       }
       
-      h1, h2 {
+      h1, h2, .welcome-title {
         margin: 0;
         font-weight: 600;
         width: fit-content;
       }
       
-      h1 {
-        color: #d1cf62;
-        font-size: 58px;
+      h1, .welcome-title {
+        color: #cad2ff;
+        font-size: 48px;
         letter-spacing: -2px;
       }
       
       h2 {
-        font-size: 30px;
+        font-size: 24px;
       }
       
       p {
@@ -74,9 +93,9 @@ export default customElements.define('pyrabank-home-view', class extends HTMLEle
         width: 100%;
         max-width: 1200px;
         box-sizing: border-box;
-        padding: 24px;
         display: flex;
         flex-direction: column;
+        padding: 24px 0;
       }
       
       .column {
@@ -89,24 +108,60 @@ export default customElements.define('pyrabank-home-view', class extends HTMLEle
         max-height: 40%;
         max-width: 40%;
       }
-    </style>
-    <section class="welcome">
       
-      <span class="background-overlay">
+      .flex {
+        flex: 1;
+      }
+      
+      .row {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .welcome-section {
+        padding-bottom: 124px;
+      }
+      pyrabank-button[icon="info"] {
+        margin-bottom: 12px;
+      }
+      @media(min-width: 540px) {
+        .row {
+          flex-flow: row wrap;
+          justify-content: space-around;
+        }
+        pyrabank-button[icon="info"] {
+          margin-bottom: 0;
+        }
+        .hero {
+          padding: 24px;
+        }
+      }
+    </style>
+    
+    <section class="welcome">
         <span class="hero">
           <span class="column">
             <span class="wrapper">
-              <h1>Welcome to decentralized finance</h1>
-              <h2>No more losing to price manipulation</h2>
+              <span class="column welcome-section">
+                <img class="right" alt="Privatebank logo" src="./assets/img/privatebank.webp"></img>
+                <span class="column" style="height: 92px">
+                  <h2 class="welcome-title" style="height: 101px"></h2>
+                  <h2 class="welcome-helper"></h2>
+                </span>
+              </span>
+            
+              <span class="row">
+                <pyrabank-button icon="info" data-event="go.info">learn more</pyrabank-button>
+                <span class="flex"></span>
+                <pyrabank-button icon="videogame-asset" data-event="go.games">games</pyrabank-button>
+              </span>
               
-              <p>The first hourglass that enables you to create stable savings by giving you the ability to invest and reinvest your earnings,
-              without any possibility of losing more than the fees you paid.</p>
-              <p>Enter first, middle or last, your token value will not crash no matter how many sell - you just sit back and collect dividends from every interaction with the platform.</p>
             </span>
-            <img class="right" src="https://pyrabank.com/wp-content/uploads/2019/10/logo-transparent-1-2-1.png"></img>
           </span>
         </span>
-      </span>
     </section>
     `
   }
